@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Search, User, Menu, X } from "lucide-react";
+import { User, Menu, X } from "lucide-react";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { cn } from "@/lib/utils";
 import { NAV_LINKS } from "@/lib/constants";
