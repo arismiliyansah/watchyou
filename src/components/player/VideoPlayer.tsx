@@ -29,7 +29,7 @@ export function VideoPlayer({
 
       import("plyr/dist/plyr.css");
 
-      plyrInstance.current = new Plyr(youtubeRef.current, {
+      const player = new Plyr(youtubeRef.current, {
         controls: [
           "play-large",
           "play",
@@ -46,6 +46,31 @@ export function VideoPlayer({
         tooltips: { controls: true, seek: true },
         keyboard: { focused: true, global: true },
       });
+
+      plyrInstance.current = player;
+
+      // Mobile: auto-rotate ke landscape saat masuk fullscreen
+      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(
+        navigator.userAgent
+      );
+
+      if (isMobile) {
+        const orientation = (
+          screen as unknown as {
+            orientation?: { lock?: (o: string) => Promise<void>; unlock?: () => void };
+          }
+        ).orientation;
+
+        player.on("enterfullscreen", () => {
+          orientation?.lock?.("landscape").catch(() => {
+            // Browser tidak support / user reject — ignore
+          });
+        });
+
+        player.on("exitfullscreen", () => {
+          orientation?.unlock?.();
+        });
+      }
     });
 
     return () => {
